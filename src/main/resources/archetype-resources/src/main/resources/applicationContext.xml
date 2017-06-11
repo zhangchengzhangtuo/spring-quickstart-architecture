@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+    <bean id="propertyConfigurer"  class="com.apin.utils.ApinUtil">
+        <property name="locations">
+            <list>
+                <value>classpath*:sys.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="${jdbc.driverClassName}"/>-->
+        <!--<property name="url" value="${jdbc.url}"/>-->
+        <!--<property name="username" value="${jdbc.username}"/>-->
+        <!--<property name="password" value="${jdbc.password}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+        <!--<property name="configLocation" value="classpath:mybatis-config.xml"/>-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="smsModelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.apin.dao.SmsModelMapper" />-->
+        <!--<property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
+    <!--</bean>-->
+
+    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${threadPool.core.size}"/>
+        <property name="maxPoolSize" value="${threadPool.max.size}"/>
+        <property name="queueCapacity" value="${threadPool.queue.capacity}"/>
+        <property name="keepAliveSeconds" value="${threadPool.keepalive.seconds}"/>
+        <property name="threadNamePrefix" value="sms"/>
+    </bean>
+
+    <bean id="httpService" class="com.apin.http.HttpService" init-method="init" destroy-method="close">
+    </bean>
+
+    <bean id="smsNotifyService" class="com.apin.notice.SmsNotifyService">
+        <property name="httpService" ref="httpService"/>
+        <property name="threadPoolTaskExecutor" ref="threadPoolTaskExecutor"/>
+    </bean>
+
+    <bean id="consumer" class="com.apin.consumer.Consumer">
+        <!--<property name="smsModelMapper" ref="smsModelMapper"/>-->
+        <property name="smsNotifyService" ref="smsNotifyService"/>
+    </bean>
+
+</beans>

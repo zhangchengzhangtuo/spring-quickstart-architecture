@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor name="sample">
+    <fileSets>
+        <fileSet filtered="true" >
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+        <!--这个地方将packaged=true注释掉以后，在生成的架构中就没有在bin之前加上包目录了-->
+        <fileSet filtered="true">
+            <directory>src/main/assembly</directory>
+            <includes>
+                <include>**/*.sh</include>
+                <include>**/nohup</include>
+                <include>*.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>*.properties</include>
+                <include>*.xml</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <!--<requiredProperties>-->
+        <!--<requiredProperty key="package-name"></requiredProperty>-->
+    <!--</requiredProperties>-->
+</archetype-descriptor>
